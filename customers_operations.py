@@ -14,7 +14,7 @@ from supabase_connection import (
 )
 import customer
 
-customer1 = customer.customer(name="Edson", age=32, weight=65)
+customer1 = customer.customer(name="Rafael", age=32, weight=71)
 
 # sign_up(email="gustavo-guidi@hotmail.com", password="123456")
 # sign_in(email="gustavo-guidi@hotmail.com", password="1234567") # wrong login
@@ -25,8 +25,8 @@ sign_in(email="gustavo-guidi@hotmail.com", password="123456")
 # select_part(selectName=True, selectAge=True, selectId=True)
 # select_where(age=32)
 # update_customer(6, customer1)
-upload_profile_pic()
-# get_profile_pic()
+upload_profile_pic(1, profile_pic_path="profile_renata.png")
+# get_profile_pic(1)
 # delete_customer(8)
 
 sign_out()

@@ -1,9 +1,10 @@
 class customer:
-    def __init__(self, name="", age="", weight="", id=""):
+    def __init__(self, id="", name="", age="", weight="", profile_pic_url=""):
         self.id = id
         self.name = name
         self.age = age
         self.weight = weight
+        self.profile_pic_url = profile_pic_url
 
     def get_id(self):
         return self.id
@@ -17,6 +18,9 @@ class customer:
     def get_weight(self):
         return self.weight
 
+    def get_profile_pic_url(self):
+        return self.profile_pic_url
+
     def set_name(self, name):
         self.name = name
 
@@ -25,3 +29,6 @@ class customer:
 
     def set_weight(self, weight):
         self.weight = weight
+
+    def set_profile_pic_url(self, profile_pic_url):
+        self.profile_pic_url = profile_pic_url

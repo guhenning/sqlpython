@@ -3,6 +3,8 @@ from supabase import create_client
 from dotenv import load_dotenv
 from gotrue.errors import AuthError
 
+from customer import customer
+
 load_dotenv()
 DB_URL = os.environ.get("DB_URL")
 PUBLIC_KEY = os.environ.get("PUBLIC_KEY")
@@ -16,7 +18,13 @@ def insert_customer(customer):
     name = customer.get_name()
     age = customer.get_age()
     weight = customer.get_weight()
-    data_to_insert = {"name": name, "age": age, "weight": weight}
+    profile_pic_url = customer.get_profile_pic_url()
+    data_to_insert = {
+        "name": name,
+        "age": age,
+        "weight": weight,
+        "profile_pic_url": profile_pic_url,
+    }
 
     supabase.table("customers").insert(data_to_insert).execute()
 
@@ -37,6 +45,7 @@ def select_part(
     selectName=False,
     selectAge=False,
     selectWeight=False,
+    selectProfilePicURl=False,
 ):
     # create list of columns to select
     selected_columns = []
@@ -52,6 +61,8 @@ def select_part(
         selected_columns.append("age")
     if selectWeight:
         selected_columns.append("weight")
+    if selectProfilePicURl:
+        selected_columns.append("profile_pic_url")
     # convert list to string
     selected_columns = ",".join(selected_columns)
     # select
@@ -97,7 +108,7 @@ def update_customer(id, customer):
     name = customer.get_name()  # get passed values
     age = customer.get_age()
     weight = customer.get_weight()
-    customer_to_update = select_customer(id)  # retrieve customer from data base
+    profile_pic_url = customer.get_profile_pic_url()
     # create empty dict
     customer_dict = {}
     # add values to update
@@ -108,6 +119,9 @@ def update_customer(id, customer):
         customer_dict["age"] = age
     if weight != "":
         customer_dict["weight"] = weight
+    if profile_pic_url != "":
+        customer_dict["profile_pic_url"] = profile_pic_url
+
     supabase.table("customers").update(customer_dict).eq("id", id).execute()
 
 
@@ -138,14 +152,23 @@ def sign_out():
 
 
 # TODO
-def upload_profile_pic():
+def upload_profile_pic(id, profile_pic_path):
     bucket_name = "profile_pic"
-    new_profile_pic = "profile_renata.png"
-    supabase.storage.from_(bucket_name).upload(
-        "/user1/profile.png", new_profile_pic, {"content-type": "image/png"}
+    new_profile_pic = profile_pic_path  # "profile_renata.png"
+    data = supabase.storage.from_(bucket_name).upload(
+        f"/user{id}/profile.png", new_profile_pic, {"content-type": "image/png"}
     )
+    # get url from data
+    if data.status_code == 200:
+        url = get_profile_pic(id)
+        # print(url)
+        customer_to_update = customer(profile_pic_url=url, name="test")
+        update_customer(id, customer_to_update)
+
+    else:
+        print(f"Upload Picture failed with Status Code: {data.status_code}")
 
 
-def get_profile_pic():
-    url = supabase.storage.from_("profile_pic").get_public_url("profile.png")
-    print(url)
+def get_profile_pic(id):
+    url = supabase.storage.from_("profile_pic").get_public_url(f"/user{id}/profile.png")
+    return url
