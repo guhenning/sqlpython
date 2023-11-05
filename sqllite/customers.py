@@ -7,11 +7,14 @@ from main import (
     delete_customer,
 )
 
+import customer
+
+customer1 = customer.customer(age=26)
 
 create_table_if_dont_exists()
 
-# insert_customer("Rafael", 33, 75)
-# update_customer(1, name="Wiliam", age=55, weight=60)
+# insert_customer(customer1)
+update_customer(10, customer1)
 # delete_customer(9)
 # select_customer(1)
-select_all()
+# select_all()
