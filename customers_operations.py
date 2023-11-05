@@ -25,7 +25,7 @@ sign_in(email="gustavo-guidi@hotmail.com", password="123456")
 # select_part(selectName=True, selectAge=True, selectId=True)
 # select_where(age=32)
 # update_customer(6, customer1)
-# upload_profile_pic()
+upload_profile_pic()
 # get_profile_pic()
 # delete_customer(8)
 

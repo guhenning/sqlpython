@@ -140,8 +140,10 @@ def sign_out():
 # TODO
 def upload_profile_pic():
     bucket_name = "profile_pic"
-    new_profile_pic = "profile.png"
-    supabase.storage.from_(bucket_name).upload("/user1/profile.png", new_profile_pic)
+    new_profile_pic = "profile_renata.png"
+    supabase.storage.from_(bucket_name).upload(
+        "/user1/profile.png", new_profile_pic, {"content-type": "image/png"}
+    )
 
 
 def get_profile_pic():
