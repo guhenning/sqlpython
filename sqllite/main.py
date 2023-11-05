@@ -1,5 +1,9 @@
 import sqlite3
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+import customer
 
 ROOT_DIR = Path(__file__).parent
 DB_NAME = "db.sqlite3"
@@ -34,7 +38,10 @@ def create_table_if_dont_exists():
 
 
 # Insert in Table #
-def insert_customer(name, age, weight):
+def insert_customer(customer):
+    name = customer.get_name()
+    age = customer.get_age()
+    weight = customer.get_weight()
     params = (name, age, weight)
     query = (
         f"INSERT INTO {TABLE_NAME} (id, name, age, weight)" f"VALUES (NULL, ?, ?, ?)"
@@ -63,13 +70,16 @@ def select_customer(id):
     return customer
 
 
-def update_customer(id, name="", age="", weight=""):
-    customer = select_customer(id)  # retrieve customer from data base
+def update_customer(id, customer):
+    name = customer.get_name()
+    age = customer.get_age()
+    weight = customer.get_weight()
+    customer_to_update = select_customer(id)  # retrieve customer from data base
     name = (
-        customer[1] if name == "" else name
+        customer_to_update[1] if name == "" else name
     )  # if passing new name set new name else use the old name from retrieved customer
-    age = customer[2] if age == "" else int(age)
-    weight = customer[3] if weight == "" else float(weight)
+    age = customer_to_update[2] if age == "" else int(age)
+    weight = customer_to_update[3] if weight == "" else float(weight)
     params = (name, age, weight, id)
     query = f"UPDATE {TABLE_NAME} SET name = ?, age = ?, weight = ? WHERE id = ?"
     db_session(query, params)
